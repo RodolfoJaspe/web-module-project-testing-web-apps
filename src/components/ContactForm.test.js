@@ -9,14 +9,42 @@ test('renders without errors', ()=>{
 });
 
 test('renders the contact form header', ()=> {
-    
+    render(<ContactForm />)
+
+    const header = screen.getByText(/contact form/i);
+
+    expect(header).toBeInTheDocument();
+    expect(header).toBeTruthy();
+    expect(header).toHaveTextContent(/contact form/i);
 });
 
 test('renders ONE error message if user enters less then 5 characters into firstname.', async () => {
-    
+    render(<ContactForm />);
+
+    const firstNameInput = screen.getByPlaceholderText(/edd/i);
+
+    userEvent.type(firstNameInput, "Rodo");
+
+    const firstNameError = screen.queryByText(/must have at least 5 characters/i);
+
+    expect(firstNameError).toBeInTheDocument();
+
 });
 
 test('renders THREE error messages if user enters no values into any fields.', async () => {
+    render(<ContactForm />);
+
+    const submitButton = screen.getByRole("button", {name: /submit/i})
+
+    userEvent.click(submitButton);
+
+    const firstNameError = screen.getByText(/must have at least 5 characters/i);
+    const lastNameError = screen.getByText(/lastName is a required field/i);
+    const emailError = screen.getByText(/must be a valid email address/i);
+
+    expect(firstNameError).toBeInTheDocument();
+    expect(lastNameError).toBeInTheDocument();
+    expect(emailError).toBeInTheDocument();
     
 });
 
